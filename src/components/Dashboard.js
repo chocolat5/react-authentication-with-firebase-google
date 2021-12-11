@@ -8,34 +8,47 @@ import { auth } from '../firebase'
 import { signOut, GoogleAuthProvider } from 'firebase/auth'
 import 'firebase/compat/auth'
 
+import { useAuth } from '../contexts/AuthContext'
 import BasicButton from './Button'
 
 const Dashboard = () => {
+  const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
 
-  const handleAction = () => {
-    signOut(auth)
-      .then(() => {
-        navigate('/login')
-      })
-      .catch((error) => {
-        console.error('Failed to log out')
-      })
+  async function handleAction() {
+    try {
+      await logout()
+      navigate('/login')
+    } catch {
+      setError('Failed to log out')
+    }
   }
 
   return (
-    <>
-      <div css={inner}>
-        <h2>Profile</h2>
-        <p>
-          <strong>Email: </strong>
-        </p>
-      </div>
-      <BasicButton title="Log out" handleAction={() => handleAction(1)} />
-    </>
+    <div css={inner}>
+      <h1>Hi {currentUser}</h1>
+      <p>You successed to log in</p>
+      <BasicButton
+        style="secondary"
+        title="Log out"
+        handleAction={() => handleAction()}
+      />
+    </div>
   )
 }
 
-const inner = css``
+const inner = css`
+  margin-bottom: 40px;
+
+  p {
+    margin-bottom: 24px;
+  }
+
+  strong {
+    font-size: 1.1em;
+    font-weight: 500;
+    letter-spacing: .04em;
+  }
+`
 
 export default Dashboard

@@ -4,23 +4,33 @@ import React, { useState } from 'react'
 import { jsx, css } from '@emotion/react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
+import { AuthProvider } from './contexts/AuthContext'
+
 import Form from './components/Form'
 import Dashboad from './components/Dashboard'
 
 const App = () => {
+  const [currentUser, setCurrentUser] = useState()
+  const [error, setError] = useState('')
+
   return (
     <Router>
-      <div className="app">
-        <main css={main}>
-          <div css={container}>
-            <h1>Firabase Authentication with google</h1>
-            <Routes>
-              <Route exact path="/" element={<Dashboad />} />
-              <Route path="/login" element={<Form />} />
-            </Routes>
-          </div>
-        </main>
-      </div>
+      <AuthProvider>
+        <div className="app">
+          <main css={main}>
+            <div css={container}>
+              <Routes>
+                <Route exact path="/" element={<Dashboad />} />
+                <Route
+                  path="/login"
+                  element={
+                    <Form />}
+                />
+              </Routes>
+            </div>
+          </main>
+        </div>
+      </AuthProvider>
     </Router>
   )
 }
@@ -37,8 +47,10 @@ const container = css`
 
   h1 {
     margin-bottom: 24px;
-    font-size: 1.6rem;
+    font-size: 3.2rem;
     font-weight: bold;
+    letter-spacing: .05em;
+    text-align: center;
   }
 `
 

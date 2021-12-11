@@ -8,47 +8,50 @@ import { auth } from '../firebase'
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import 'firebase/compat/auth'
 
+import { useAuth } from '../contexts/AuthContext'
 import BasicButton from './Button'
+import logo from '../assets/img/logo_google.svg'
+import logoWh from '../assets/img/logo_google_white.svg'
 
 const Form = () => {
+  const { signup } = useAuth()
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const handleAction = (id) => {
-    // instance
-    const provider = new GoogleAuthProvider()
-
-    // login with popup
-    if (id === 1) {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          console.log(result.user)
-          navigate('/')
-        })
-        .catch((error) => {
-          console.error(error.message)
-        })
+  async function handleAction() {
+    try {
+      await signup()
+      navigate('/')
+    } catch {
+      setError('Failed to log in')
     }
   }
 
   return (
     <div css={container}>
-      <h2>Sign up</h2>
+      <h1>Hello!</h1>
       {error && <div css={alert}>{error}</div>}
       <BasicButton
-        title="Sign up with Google"
-        handleAction={() => handleAction(1)}
-      />
-      <p>Already have an account?</p>
-      <BasicButton
+        style="secondary"
+        logo={logoWh}
+        alt="Google"
         title="Log in with Google"
-        handleAction={() => handleAction(1)}
+        handleAction={() => handleAction()}
+      />
+      <p>Don't have an account?</p>
+      <BasicButton
+        style="primary"
+        logo={logo}
+        alt="Google"
+        title="Sign up with Google"
+        handleAction={() => handleAction()}
       />
     </div>
   )
 }
 
 const alert = css`
+  margin-bottom: 16px;
   padding: 8px;
   color: red;
   background-color: rgba(255, 0, 0, 0.1);
@@ -58,12 +61,6 @@ const alert = css`
 
 const container = css`
   text-align: center;
-
-  h2 {
-    font-size: 1.6rem;
-    font-weight: bold;
-    margin-bottom: 12px;
-  }
 
   p {
     margin: 32px 0 12px;
