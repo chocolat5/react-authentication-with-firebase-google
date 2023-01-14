@@ -4,8 +4,6 @@ import React from 'react'
 import { jsx, css } from '@emotion/react'
 import { useNavigate } from 'react-router-dom'
 
-import { auth } from '../firebase'
-import { signOut, GoogleAuthProvider } from 'firebase/auth'
 import 'firebase/compat/auth'
 
 import { useAuth } from '../contexts/AuthContext'
